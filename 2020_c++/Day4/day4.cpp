@@ -8,6 +8,7 @@
 // cid(Country ID)
 
 #include <fstream>
+#include <future>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -41,6 +42,26 @@ CountNumberOfValidPassports(const std::vector<std::string> &aPassportData) {
   return numberOfValidPassports;
 }
 
+uint32_t CountNumberOfValidPassportsAsync(
+    const std::vector<std::string> &aPassportData) {
+
+  const std::vector<std::string> passportDataFirstHalf(
+      aPassportData.begin(), aPassportData.begin() + aPassportData.size() / 2);
+
+  const std::vector<std::string> passportDataSecondHalf(
+      aPassportData.begin() + aPassportData.size() / 2, aPassportData.end());
+
+  auto firstHalf = std::async(std::launch::async, [&passportDataFirstHalf]() {
+    return CountNumberOfValidPassports(passportDataFirstHalf);
+  });
+
+  auto secondHalf = std::async(std::launch::async, [&passportDataSecondHalf]() {
+    return CountNumberOfValidPassports(passportDataSecondHalf);
+  });
+
+  return firstHalf.get() + secondHalf.get();
+}
+
 void ReadAndParseInput(std::vector<std::string> &apassportData) {
   std::ifstream in("input.txt");
 
@@ -68,6 +89,6 @@ int main() {
   ReadAndParseInput(passportData);
 
   std::cout << "Number of valid passports are = "
-            << CountNumberOfValidPassports(passportData);
+            << CountNumberOfValidPassportsAsync(passportData);
   return 0;
 }
