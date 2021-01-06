@@ -1,11 +1,17 @@
+#include <algorithm>
 #include <fstream>
 #include <iostream>
-#include <set>
+#include <map>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
+// part1:- count the number of questions to which anyone answered "yes"
+// part2:- count the number of questions to which everyone in a group answered
+// "yes"
+
 std::uint32_t GetSumForAGroup(const std::vector<std::string> &aGroupInfo) {
-  std::set<char> uniqueData;
+  std::unordered_set<char> uniqueData;
 
   for (const auto &data : aGroupInfo) {
     uniqueData.insert(data.begin(), data.end());
@@ -14,8 +20,8 @@ std::uint32_t GetSumForAGroup(const std::vector<std::string> &aGroupInfo) {
   return uniqueData.size();
 }
 
-std::uint32_t
-CalculateSum(const std::vector<std::vector<std::string>> &aInputData) {
+std::uint32_t CalculateSum_Of_Unique_Yes(
+    const std::vector<std::vector<std::string>> &aInputData) {
   std::uint32_t sum = 0;
 
   for (const auto &groupInfo : aInputData) {
@@ -26,9 +32,29 @@ CalculateSum(const std::vector<std::vector<std::string>> &aInputData) {
   return sum;
 }
 
+uint32_t GetCount_Yes_From_Everyone_In_A_Group(
+    const std::vector<std::vector<std::string>> &inputData) {
+  uint32_t count = 0;
+  std::string reference;
+  for (auto &group : inputData) {
+    reference = group[0];
+    for (int i = 1; i < group.size(); ++i) {
+      reference.erase(std::remove_if(reference.begin(), reference.end(),
+                                     [&group, &i](char c) {
+                                       return group[i].find(c) ==
+                                              std::string::npos;
+                                     }),
+                      reference.end());
+    }
+
+    count += reference.size();
+  }
+  return count;
+}
+
 int main() {
 
-  std::ifstream input_file("input_test.txt");
+  std::ifstream input_file("input.txt");
 
   std::vector<std::vector<std::string>> inputData;
 
@@ -50,7 +76,9 @@ int main() {
 
   input_file.close();
 
-  std::cout << "calculated sum = " << CalculateSum(inputData);
+  std::cout << "first solution = " << CalculateSum_Of_Unique_Yes(inputData);
+  std::cout << "second solution = "
+            << GetCount_Yes_From_Everyone_In_A_Group(inputData);
 
   return 0;
 }
