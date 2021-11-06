@@ -1,25 +1,36 @@
 
-from typing import Iterator
 from Helper.helper import measure_time
 import pytest
 import argparse
-import itertools
+import collections
 
 
 def compute(s: str) -> int:
-    numbers = [int(number) for number in s.split()]
+    counter = 0
+    for line in s.splitlines():
+        r, c, p = line.split()
+        r_min_s, r_max_s = r.split('-')
+        r_min = int(r_min_s)
+        r_max = int(r_max_s)
+        c = c[0]
+        counts_of_char = collections.Counter(p)[c]
+        if (p[r_min - 1] == c) ^ (p[r_max - 1] == c):
+            counter += 1
 
-    for(a, b, c) in itertools.combinations(numbers, 3):
-        if a + b + c == 2020:
-            return a * b * c
+    return counter
 
-    raise NotImplementedError
+
+INPUT_S = '''\
+1-3 a: abcde
+1-3 b: cdefg
+2-9 c: ccccccccc
+'''
 
 
 @pytest.mark.parametrize(
     ('input_s', 'expected'),
     (
-        ('1721 979 366 299 675 1456', 514579),
+        (INPUT_S, 2),
     ),
 )
 def test(input_s: str, expected: int) -> None:
@@ -31,7 +42,7 @@ def main() -> int:
     parser.add_argument('data_file')
     args = parser.parse_args()
 
-    with open(args.data_file) as f, measure_time("day1:part2"):
+    with open(args.data_file) as f, measure_time("day2:part2"):
         print(compute(f.read()))
 
     return 0

@@ -9,7 +9,6 @@ def measure_time(name: str = '') -> Generator[None, None, None]:
     try:
         yield
     finally:
-        print("finally..........")
         after = time.time()
         t = (after - before) * 1000
         unit = 'ms'
