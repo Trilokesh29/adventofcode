@@ -4,14 +4,27 @@
 
 using namespace std;
 
-int solution(std::vector<std::string> input)
-{
-    size_t bit_count = input[0].length();
-    int gamma_rate = 0;
-    int epsilon_rate = 0;
 
-    for(auto index =0; index < bit_count ; ++index)
+void filter(std::vector<std::string> &input, int bit, int ref)
+{
+    auto newend = std::remove_if(input.begin(), input.end(), [&bit, &ref](auto &data){
+            return (data[bit] -'0') != ref;
+    });
+
+    input.erase(newend, input.end());
+}
+
+template<typename T>
+auto findvalue(std::vector<std::string> input, T identifier)
+{
+    const size_t bit_count = input[0].length();
+    for(int index =0; index < bit_count; ++index)
     {
+        if(input.size() == 1)
+        {
+            break;
+        }
+
         std::vector<int> temp;
         temp.reserve(input.size());
         
@@ -21,19 +34,44 @@ int solution(std::vector<std::string> input)
         }
 
         const size_t count_of_1 = std::count(temp.begin(), temp.end(), 1);
-        if (count_of_1 ==  std::max(count_of_1, (input.size() - count_of_1)))
+        const size_t count_of_0 = (input.size() - count_of_1);
+
+        if (count_of_1 > count_of_0)
         {
-            gamma_rate = (gamma_rate << 1) | 1;
-            epsilon_rate = (epsilon_rate << 1) | 0;
+            if(identifier == "o2")
+                filter(input, index, 1);
+            else
+                filter(input, index, 0);
+        }
+        else if(count_of_1 < count_of_0)
+        {
+            if(identifier == "o2")
+                filter(input, index, 0);
+            else
+                filter(input, index, 1);
         }
         else
         {
-            gamma_rate = (gamma_rate << 1) | 0;
-            epsilon_rate = (epsilon_rate << 1) |1;
+            if(identifier == "o2")
+                filter(input, index, 1);
+            else
+                filter(input, index, 0);
         }
     }
 
-    return gamma_rate * epsilon_rate;
+    int data = 0;
+    for(int index = 0; index < input[0].length(); ++index)
+    {
+        data = (data << 1) | (input[0][index] -'0');
+    }
+
+    return data;
+}
+
+auto solution(std::vector<std::string> input)
+{
+    size_t bit_count = input[0].length();
+    return findvalue(input, "co2") * findvalue(input, "o2");
 }
 
 
