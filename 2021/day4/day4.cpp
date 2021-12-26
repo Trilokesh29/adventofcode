@@ -14,7 +14,7 @@ void GetOptions(std::stringstream &input, std::vector<int> & options)
 
     while(std::getline(input, segment, ','))
     {
-        options.push_back(stoi(segment)); //Split string at '_' character
+        options.push_back(stoi(segment)); //Split string at ',' character
     }
 }
 
