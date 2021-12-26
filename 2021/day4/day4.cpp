@@ -233,7 +233,7 @@ int part2(std::vector<int> deck,std::vector<std::vector<std::vector<int>>> board
 
 int main()
 {
-    std:;vector<std::vector<std::vector<int>>> input;
+    std::vector<std::vector<std::vector<int>>> input;
     std::vector<int> options;
     ReadInput(options, input);
 
