@@ -66,6 +66,6 @@ int main()
         init_population(inp, ',', population);
 
         cout << day6(population) << "\n";
-        cout << day6(population, 256) << "\n";\
+        cout << day6(population, 256) << "\n";
     }
 }
