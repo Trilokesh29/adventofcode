@@ -58,7 +58,6 @@ void traverseCoordinates(std::pair<int,int> startPoint, std::pair<int,int>endPoi
     }
 }
 
-
 void ParseInput()
 {
     std::ifstream data("./input.txt");
