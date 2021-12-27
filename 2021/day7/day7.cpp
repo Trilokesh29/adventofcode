@@ -1,10 +1,7 @@
 #include <algorithm>
-#include <cmath>
 #include <cstdlib>
-#include <deque>
 #include <fstream>
 #include <iostream>
-#include <numeric>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -32,25 +29,16 @@ get_effiecient_position(std::vector<int32_t> &data) {
 
     uint64_t temp1 = 0, temp2 = 0;
     for (auto index = 0; index < data.size(); ++index) {
-      //   cout << "position: " << position << " data: " << data[index] << "\n";
       temp1 += std::abs(data[index] - position);
       auto diff = std::abs(data[index] - position);
       temp2 += (diff * (diff + 1)) / 2;
     }
 
-    // cout << "sum for position: " << position << " sum:" << temp << "\n";
+    sum_fuel_part1 =
+        (sum_fuel_part1 == 0) ? temp1 : std::min(sum_fuel_part1, temp1);
 
-    if (sum_fuel_part1 == 0) {
-      sum_fuel_part1 = temp1;
-    } else if (sum_fuel_part1 > temp1) {
-      sum_fuel_part1 = temp1;
-    }
-
-    if (sum_fuel_part2 == 0) {
-      sum_fuel_part2 = temp2;
-    } else if (sum_fuel_part2 > temp2) {
-      sum_fuel_part2 = temp2;
-    }
+    sum_fuel_part2 =
+        (sum_fuel_part2 == 0) ? temp2 : std::min(sum_fuel_part2, temp2);
   }
 
   return {sum_fuel_part1, sum_fuel_part2};
